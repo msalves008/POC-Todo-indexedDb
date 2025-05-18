@@ -1,8 +1,7 @@
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { motion } from 'framer-motion'
 import type { Todo } from '@/models/Todo'
-import { Trash2 } from 'lucide-react'
+import { DeleteTodoDialog } from './DeleteTodoDialog'
 
 interface TodoItemProps {
   todo: Todo
@@ -14,6 +13,12 @@ export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
   const handleChange = () => {
     if (todo.id) {
       onToggle(todo.id)
+    }
+  }
+
+  const handleDelete = () => {
+    if (todo.id) {
+      onDelete(todo.id)
     }
   }
 
@@ -30,13 +35,7 @@ export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
           {todo.text}
         </span>
       </div>
-      <Button
-        size="icon"
-        variant="destructive"
-        onClick={() => todo.id && onDelete(todo.id)}
-      >
-        <Trash2 />
-      </Button>
+      <DeleteTodoDialog onDelete={handleDelete} />
     </motion.li>
   )
 }
