@@ -6,6 +6,7 @@ import { TodoItem } from './TodoItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
+import { EmptyState } from './EmptyState'
 
 export function TodoList() {
   const [isShowFilters, setIsShowFilters] = useState(false)
@@ -43,9 +44,7 @@ export function TodoList() {
         <Separator />
         <CardContent>
           {todos.length === 0 ? (
-            <div className="text-center text-muted-foreground py-8">
-              Nenhuma tarefa encontrada.
-            </div>
+            <EmptyState />
           ) : (
             <ul className="space-y-2">
               <AnimatePresence>
