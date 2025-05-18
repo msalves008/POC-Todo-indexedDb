@@ -16,6 +16,7 @@ interface FilterOptions {
 
 export function useTodos() {
   const [todos, setTodos] = useState<Todo[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [filters, setFilters] = useState<FilterOptions>({
     search: '',
     status: 'all',
@@ -24,13 +25,18 @@ export function useTodos() {
   })
 
   const loadTodos = useCallback(async () => {
-    const data = await filterTodos({
-      search: filters.search,
-      status: filters.status === 'all' ? undefined : filters.status,
-      fromDate: filters.fromDate,
-      toDate: filters.toDate,
-    })
-    setTodos(data)
+    try {
+      setIsLoading(true)
+      const data = await filterTodos({
+        search: filters.search,
+        status: filters.status === 'all' ? undefined : filters.status,
+        fromDate: filters.fromDate,
+        toDate: filters.toDate,
+      })
+      setTodos(data)
+    } finally {
+      setIsLoading(false)
+    }
   }, [filters])
 
   const handleAddTodo = async (text: string) => {
@@ -74,6 +80,7 @@ export function useTodos() {
   return {
     todos,
     filters,
+    isLoading,
     loadTodos,
     handleAddTodo,
     handleToggle,

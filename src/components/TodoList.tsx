@@ -7,12 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
 import { EmptyState } from './EmptyState'
+import { TodoListSkeleton } from './TodoListSkeleton'
 
 export function TodoList() {
   const [isShowFilters, setIsShowFilters] = useState(false)
   const {
     todos,
     filters,
+    isLoading,
     handleAddTodo,
     handleToggle,
     handleDelete,
@@ -22,7 +24,7 @@ export function TodoList() {
 
   return (
     <div className="mt-4 space-y-4 w-full flex flex-col items-center">
-      <Card className=" w-full max-w-xl">
+      <Card className="w-full max-w-xl">
         <CardHeader>
           <CardTitle>Tarefas</CardTitle>
           <TodoForm
@@ -43,7 +45,9 @@ export function TodoList() {
         </CardHeader>
         <Separator />
         <CardContent>
-          {todos.length === 0 ? (
+          {isLoading ? (
+            <TodoListSkeleton />
+          ) : todos.length === 0 ? (
             <EmptyState />
           ) : (
             <ul className="space-y-2">
