@@ -9,6 +9,8 @@ import {
 } from '@/components/ui/select'
 import { Search, Filter, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useDebounce } from '@/hooks/useDebounce'
+import { useEffect, useState } from 'react'
 
 interface TodoFiltersProps {
   filters: {
@@ -31,6 +33,21 @@ export function TodoFilters({
   onFilterChange,
   onClear,
 }: TodoFiltersProps) {
+  const [searchInput, setSearchInput] = useState(filters.search)
+  const debouncedSearch = useDebounce(searchInput, 500)
+
+  // Update local search input when filters change from outside
+  useEffect(() => {
+    setSearchInput(filters.search)
+  }, [filters.search])
+
+  // Update filters when debounced search changes
+  useEffect(() => {
+    if (debouncedSearch !== filters.search) {
+      onFilterChange({ search: debouncedSearch })
+    }
+  }, [debouncedSearch, filters.search, onFilterChange])
+
   const hasActiveFilters = Object.values(filters).some(
     (value) => value !== '' && value !== 'all'
   )
@@ -42,8 +59,8 @@ export function TodoFilters({
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Buscar tarefa..."
-            value={filters.search}
-            onChange={(e) => onFilterChange({ search: e.target.value })}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="pl-9"
           />
         </div>
